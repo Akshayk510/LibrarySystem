@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Profile - Library System</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-right: 20px;
+        }
+        
+        .profile-info h1 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+        
+        .profile-info p {
+            margin: 5px 0;
+            color: #7f8c8d;
+        }
+        
+        .section {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .book-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .book-item {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .book-item h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+        
+        .book-item p {
+            margin: 5px 0;
+            color: #7f8c8d;
+        }
+        
+        .return-button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        .return-button:hover {
+            background-color: #c0392b;
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            color: #7f8c8d;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .stat-box {
+            flex: 1;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 0 10px;
+        }
+        
+        .stat-box:first-child {
+            margin-left: 0;
+        }
+        
+        .stat-box:last-child {
+            margin-right: 0;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+        }
+        
+        .action-buttons {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .action-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 0 10px;
+        }
+        
+        .action-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile-container">
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    {{ user.username.0|upper }}
+                </div>
+                <div class="profile-info">
+                    <h1>{{ user.username }}</h1>
+                    <p>{{ user.email }}</p>
+                    <p>Member since: {{ user.date_joined|date:"F d, Y" }}</p>
+                </div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-number">{{ current_borrows }}</div>
+                    <div class="stat-label">Currently Borrowed</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">{{ total_borrows }}</div>
+                    <div class="stat-label">Total Borrowed</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">{{ overdue_borrows }}</div>
+                    <div class="stat-label">Overdue</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>Currently Borrowed Books</h2>
+                {% if borrowed_books %}
+                    <ul class="book-list">
+                        {% for borrow in borrowed_books %}
+                            <li class="book-item">
+                                <h3>{{ borrow.book.title }}</h3>
+                                <p><strong>Author:</strong> {{ borrow.book.author }}</p>
+                                <p><strong>Borrowed on:</strong> {{ borrow.borrowed_at|date:"F d, Y" }}</p>
+                                <p><strong>Due date:</strong> {{ borrow.due_date|date:"F d, Y" }}</p>
+                                
+                                {% if borrow.is_overdue %}
+                                    <p style="color: #e74c3c;"><strong>Status:</strong> Overdue</p>
+                                {% else %}
+                                    <p><strong>Status:</strong> On time</p>
+                                {% endif %}
+                                
+                                <a href="{% url 'return_book' borrow.id %}" class="return-button">Return Book</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty-message">
+                        You haven't borrowed any books yet.
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="section">
+                <h2>Borrowing History</h2>
+                {% if history %}
+                    <ul class="book-list">
+                        {% for borrow in history %}
+                            <li class="book-item">
+                                <h3>{{ borrow.book.title }}</h3>
+                                <p><strong>Author:</strong> {{ borrow.book.author }}</p>
+                                <p><strong>Borrowed on:</strong> {{ borrow.borrowed_at|date:"F d, Y" }}</p>
+                                <p><strong>Returned on:</strong> {{ borrow.returned_at|date:"F d, Y" }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty-message">
+                        No borrowing history available.
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="action-buttons">
+                <a href="{% url 'book_list' %}" class="action-button">Browse Books</a>
+                <a href="{% url 'home' %}" class="action-button">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

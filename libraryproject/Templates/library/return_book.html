@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Return Book</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Return Book</h1>
+
+        <div class="book-details">
+            <h2>{{ borrow.book.title }}</h2>
+            <p><strong>Author:</strong> {{ borrow.book.author }}</p>
+            <p><strong>Borrowed on:</strong> {{ borrow.borrowed_at|date:"F d, Y" }}</p>
+            <p><strong>Due date:</strong> {{ borrow.due_date|date:"F d, Y" }}</p>
+        </div>
+
+        <div class="confirmation-message">
+            <p>Are you sure you want to return this book?</p>
+        </div>
+
+        <form method="post" action="{% url 'return_book' borrow.id %}">
+            {% csrf_token %}
+            <button type="submit">
+                Confirm Return
+            </button>
+            <a href="{% url 'borrowed_books' %}">
+                Cancel
+            </a>
+        </form>
+    </div>
+</body>
+</html>

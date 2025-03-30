@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library Home</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #3498db;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .hero {
+            background-color: white;
+            border-radius: 10px;
+            padding: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #2980b9;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #3498db;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .feature-description {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        .feature-link {
+            display: inline-block;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .feature-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .footer p {
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .nav-links {
+                margin-top: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-links a {
+                margin: 5px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Library System</div>
+                <div class="nav-links">
+                    <a href="{% url 'home' %}">Home</a>
+                    <a href="{% url 'book_list' %}">Books</a>
+                    <a href="{% url 'search' %}">Search</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'borrowed_books' %}">My Borrows</a>
+                        <a href="{% url 'profile' %}">Profile</a>
+                        <a href="{% url 'logout' %}">Logout</a>
+                    {% else %}
+                        <a href="{% url 'login' %}">Login</a>
+                        <a href="{% url 'register' %}">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Welcome to the Library System</h1>
+            <p>Discover, borrow, and enjoy a wide variety of books from our collection. Our library system makes it easy to find your next great read.</p>
+            <a href="{% url 'book_list' %}" class="cta-button">Browse Books</a>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h2 class="feature-title">Browse Books</h2>
+                <p class="feature-description">Explore our extensive collection of books across various genres and topics.</p>
+                <a href="{% url 'book_list' %}" class="feature-link">View All Books</a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h2 class="feature-title">Search</h2>
+                <p class="feature-description">Find specific books by title, author, or ISBN using our advanced search feature.</p>
+                <a href="{% url 'search' %}" class="feature-link">Search Books</a>
+            </div>
+
+            {% if user.is_authenticated %}
+                <div class="feature-card">
+                    <div class="feature-icon">👤</div>
+                    <h2 class="feature-title">My Profile</h2>
+                    <p class="feature-description">View your borrowing history and manage your account settings.</p>
+                    <a href="{% url 'profile' %}" class="feature-link">Go to Profile</a>
+                </div>
+            {% else %}
+                <div class="feature-card">
+                    <div class="feature-icon">🔐</div>
+                    <h2 class="feature-title">Join Us</h2>
+                    <p class="feature-description">Create an account to borrow books and access personalized features.</p>
+                    <a href="{% url 'register' %}" class="feature-link">Register Now</a>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if user.is_authenticated %}
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">📖</div>
+                    <h2 class="feature-title">My Borrowed Books</h2>
+                    <p class="feature-description">View and manage the books you currently have borrowed.</p>
+                    <a href="{% url 'borrowed_books' %}" class="feature-link">View Borrowed Books</a>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🌟</div>
+                    <h2 class="feature-title">Recommendations</h2>
+                    <p class="feature-description">Discover new books based on your reading history and preferences.</p>
+                    <a href="{% url 'recommendations' %}" class="feature-link">Get Recommendations</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <p>&copy; 2023 Library System. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Borrowed Books</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>My Borrowed Books</h1>
+        {% if borrowed_books %}
+            <ul>
+                {% for borrow in borrowed_books %}
+                    <li>
+                        <h3>{{ borrow.book.title }}</h3>
+                        <p><strong>Author:</strong> {{ borrow.book.author }}</p>
+                        <p><strong>Borrowed on:</strong> {{ borrow.borrowed_at|date:"F d, Y" }}</p>
+                        <p><strong>Due date:</strong> {{ borrow.due_date|date:"F d, Y" }}</p>
+
+                        <div>
+                            <form action="{% url 'return_book' borrow.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit">Return Book</button>
+                            </form>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div>
+                <p>You haven't borrowed any books yet.</p>
+            </div>
+        {% endif %}
+        <div>
+            <a href="{% url 'book_list' %}">
+                Browse Books
+            </a>
+        </div>
+    </div>
+</body>
+</html>

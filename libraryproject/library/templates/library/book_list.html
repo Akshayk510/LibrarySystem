@@ -1,0 +1,25 @@
+{% for book in books %}
+    <div>
+        <h3>{{ book.title }}</h3>
+        <p>Author: {{ book.author }}</p>
+        <p>ISBN: {{ book.isbn }}</p>
+        {% if book.available %}
+            <button onclick="borrowBook({{ book.id }})">Borrow</button>
+        {% else %}
+            <span>✔ Borrowed by {{ book.borrowed_by.username }}</span>
+        {% endif %}
+    </div>
+{% endfor %}
+
+<script>
+    function borrowBook(bookId) {
+        fetch(`/borrow/${bookId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+        })
+        .then(response => response.json())
+        .then(data => alert(data.message));
+    }
+</script>
